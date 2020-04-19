@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,13 +30,17 @@ SOURCES += \
         mainwindow.cpp \
     library/graph.cpp \
     library/node.cpp \
-    library/edge.cpp
+    library/edge.cpp \
+    library/menu.cpp \
+    library/data_adapter.cpp
 
 HEADERS += \
         mainwindow.h \
     library/graph.h \
     library/node.h \
-    library/edge.h
+    library/edge.h \
+    library/menu.h \
+    library/data_adapter.h
 
 FORMS += \
         mainwindow.ui

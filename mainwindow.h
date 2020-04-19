@@ -3,8 +3,12 @@
 
 #include "library/graph.h"
 #include "library/node.h"
+#include "library/menu.h"
+#include "library/data_adapter.h"
 
 #include <QMainWindow>
+#include <QTextEdit>
+
 
 namespace Ui {
 class MainWindow;
@@ -20,8 +24,21 @@ public:
     ~MainWindow();
 
 private:
+    void CreateConnections();
+
+private slots:
+    void JsonButtonClicked();
+    void GraphButtonClicked();
+    void ResultsButtonClicked();
+
+    void UpdateGraphList(QVector<QPair<int, QString>>);
+
+private:
     Ui::MainWindow *ui;
     TGraphWidget* GraphWidget_;
+    QTextEdit* JsonTextEdit_;
+    TMenu* Menu_;
+    TDataAdapter* DataAdapter_;
 };
 
 #endif // MAINWINDOW_H
