@@ -31,14 +31,16 @@ private slots:
     void GraphButtonClicked();
     void ResultsButtonClicked();
 
-    void UpdateGraphList(QVector<QPair<int, QString>>);
-
+    void UpdateGraphList(QVector<QPair<int, QString>> graphList);
+    void UpdateGraph(QMap<QString, QVector<QString>> graph);
+    void UpdateCurrentGraphID(int id);
 private:
     Ui::MainWindow *ui;
     TGraphWidget* GraphWidget_;
     QTextEdit* JsonTextEdit_;
     TMenu* Menu_;
     TDataAdapter* DataAdapter_;
+    int CurrentGraphID = 0;
 };
 
 #endif // MAINWINDOW_H

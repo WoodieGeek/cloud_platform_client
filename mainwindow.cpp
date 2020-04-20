@@ -15,19 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     JsonTextEdit_ = new QTextEdit(this);
     DataAdapter_ = new TDataAdapter();
 
-    QMap<QString, QVector<QString>> graph;
-
-    graph["START"].push_back("PROCESS");
-    graph["START"].push_back("WEB");
-    graph["PROCESS"].push_back("FINISH");
-    graph["PROCESS"].push_back("SOME_NODE");
-    graph["WEB"].push_back("FINISH");
-    graph["SOME_NODE"].push_back("FINISH");
-    graph["FINISH"] = {};
-
-
-    GraphWidget_->UpdateGraph(graph);
-
     QHBoxLayout* graphLayout = new QHBoxLayout();
     graphLayout->addWidget(GraphWidget_);
     graphLayout->addWidget(JsonTextEdit_);
@@ -52,7 +39,11 @@ void MainWindow::CreateConnections() {
     connect(Menu_->GetJsonButton(), SIGNAL(clicked(bool)), this, SLOT(JsonButtonClicked()));
     connect(Menu_->GetResultsButton(), SIGNAL(clicked(bool)), this, SLOT(ResultsButtonClicked()));
     connect(Menu_->GetGraphButton(), SIGNAL(clicked(bool)), this, SLOT(GraphButtonClicked()));
+
+    connect(Menu_, SIGNAL(UpdateCurrentGraphID(int)), this, SLOT(UpdateCurrentGraphID(int)));
+
     connect(DataAdapter_, SIGNAL(UpdateGraphList(QVector<QPair<int,QString> >)), this, SLOT(UpdateGraphList(QVector<QPair<int,QString> >)));
+    connect(DataAdapter_,SIGNAL(UpdateGraph(QMap<QString,QVector<QString> >)), this, SLOT(UpdateGraph(QMap<QString,QVector<QString> >)));
 }
 
 void MainWindow::JsonButtonClicked() {
@@ -73,6 +64,17 @@ void MainWindow::ResultsButtonClicked() {
 
 void MainWindow::UpdateGraphList(QVector<QPair<int, QString> > graphList) {
     Menu_->UpdateComboBox(graphList);
+}
+
+void MainWindow::UpdateGraph(QMap<QString, QVector<QString> > graph) {
+    GraphWidget_->UpdateGraph(graph);
+    repaint();
+}
+
+void MainWindow::UpdateCurrentGraphID(int id)
+{
+    CurrentGraphID = id;
+    DataAdapter_->GetGraph(id);
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {

@@ -8,8 +8,9 @@
 #include <QMap>
 
 
-class TMenu
+class TMenu : public QObject
 {
+    Q_OBJECT
 public:
     TMenu(QWidget* parent);
     QVBoxLayout* GetMainLayout();
@@ -18,7 +19,10 @@ public:
     QPushButton* GetResultsButton();
     void UpdateComboBox(QVector<QPair<int, QString>> graphList);
     ~TMenu();
-private:
+private slots:
+    void UpdateCurrentInComboBox(QString graphName);
+signals:
+    void UpdateCurrentGraphID(int);
 private:
     QPushButton* GraphButton_;
     QPushButton* JsonButton_;

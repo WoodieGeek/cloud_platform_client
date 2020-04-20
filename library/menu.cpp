@@ -23,6 +23,7 @@ TMenu::TMenu(QWidget* parent) : Parent_(parent)
     MainLayout_->addWidget(JsonButton_);
     MainLayout_->addWidget(GraphButton_);
     MainLayout_->addWidget(ResultsButton_);
+    connect(ComboBox_, SIGNAL(currentIndexChanged(QString)), this, SLOT(UpdateCurrentInComboBox(QString)));
 }
 
 void TMenu::UpdateComboBox(QVector<QPair<int, QString> > graphList) {
@@ -56,4 +57,9 @@ TMenu::~TMenu() {
     delete GraphButton_;
     delete ComboBox_;
     delete MainLayout_;
+}
+
+void TMenu::UpdateCurrentInComboBox(QString graphName) {
+    auto ID = Graph2ID_[graphName];
+    emit UpdateCurrentGraphID(ID);
 }
