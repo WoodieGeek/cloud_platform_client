@@ -5,6 +5,8 @@
 #include "library/node.h"
 #include "library/menu.h"
 #include "library/data_adapter.h"
+#include "library/json_edit.h"
+#include "library/create_dialog.h"
 
 #include <QMainWindow>
 #include <QTextEdit>
@@ -25,21 +27,27 @@ public:
 
 private:
     void CreateConnections();
+    void UpdateTextEdit();
 
 private slots:
     void JsonButtonClicked();
     void GraphButtonClicked();
     void ResultsButtonClicked();
+    void CreateButtonClicked();
+    void CreateDialogAddGraph(QString graphName);
 
     void UpdateGraphList(QVector<QPair<int, QString>> graphList);
     void UpdateGraph(QMap<QString, QVector<QString>> graph);
     void UpdateCurrentGraphID(int id);
+    void GraphHaveBeenCreated();
 private:
     Ui::MainWindow *ui;
     TGraphWidget* GraphWidget_;
-    QTextEdit* JsonTextEdit_;
+    TJsonEdit* JsonEdit_;
     TMenu* Menu_;
     TDataAdapter* DataAdapter_;
+    TCreateDialog* CreateDialog_;
+
     int CurrentGraphID = 0;
 };
 

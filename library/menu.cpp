@@ -7,15 +7,20 @@ TMenu::TMenu(QWidget* parent) : Parent_(parent)
 
     JsonButton_ = new QPushButton();
     JsonButton_->setText("JSON");
-    JsonButton_->setFixedWidth(100);
+    JsonButton_->setFixedWidth(WIDTH);
 
     GraphButton_ = new QPushButton(Parent_);
     GraphButton_->setText("GRAPH");
-    GraphButton_->setFixedWidth(100);
+    GraphButton_->setFixedWidth(WIDTH);
 
     ResultsButton_ = new QPushButton();
     ResultsButton_->setText("RESULTS");
-    ResultsButton_->setFixedWidth(100);
+    ResultsButton_->setFixedWidth(WIDTH);
+
+    CreateButton_ = new QPushButton();
+    CreateButton_->setText("CREATE");
+    CreateButton_->setFixedWidth(WIDTH);
+
 
     MainLayout_ = new QVBoxLayout();
 
@@ -23,6 +28,8 @@ TMenu::TMenu(QWidget* parent) : Parent_(parent)
     MainLayout_->addWidget(JsonButton_);
     MainLayout_->addWidget(GraphButton_);
     MainLayout_->addWidget(ResultsButton_);
+    MainLayout_->addWidget(CreateButton_);
+
     connect(ComboBox_, SIGNAL(currentIndexChanged(QString)), this, SLOT(UpdateCurrentInComboBox(QString)));
 }
 
@@ -51,10 +58,17 @@ QPushButton* TMenu::GetResultsButton() {
     return ResultsButton_;
 }
 
+QPushButton *TMenu::GetCreateButton()
+{
+    return CreateButton_;
+}
+
 TMenu::~TMenu() {
     delete JsonButton_;
     delete ResultsButton_;
     delete GraphButton_;
+    delete CreateButton_;
+
     delete ComboBox_;
     delete MainLayout_;
 }

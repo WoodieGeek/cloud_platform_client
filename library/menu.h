@@ -17,6 +17,7 @@ public:
     QPushButton* GetJsonButton();
     QPushButton* GetGraphButton();
     QPushButton* GetResultsButton();
+    QPushButton* GetCreateButton();
     void UpdateComboBox(QVector<QPair<int, QString>> graphList);
     ~TMenu();
 private slots:
@@ -27,11 +28,13 @@ private:
     QPushButton* GraphButton_;
     QPushButton* JsonButton_;
     QPushButton* ResultsButton_;
+    QPushButton* CreateButton_;
     QComboBox* ComboBox_;
 
     QVBoxLayout* MainLayout_;
     QWidget* Parent_;
     QMap<QString, int> Graph2ID_;
+    static const int WIDTH = 100;
 };
 
 #endif // MENU_H

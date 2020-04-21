@@ -17,6 +17,9 @@ TDataAdapter::TDataAdapter()
     Resolver_["/graph"] = [this](QString body) {
         this->ProcessGraph(std::move(body));
     };
+    Resolver_["/create"] = [this](QString body) {
+        this->ProcessGraphCreate();
+    };
 }
 
 void TDataAdapter::ReadyRead(QNetworkReply *reply) {
@@ -68,6 +71,10 @@ void TDataAdapter::ProcessGraph(QString body) {
     emit UpdateGraph(result);
 }
 
+void TDataAdapter::ProcessGraphCreate() {
+    emit GraphHaveBeenCreated();
+}
+
 void TDataAdapter::GetAllGraphs() {
     QString url;
     url = "http://" + Host_  + ":" + Port_ + "/graphs";
@@ -79,6 +86,14 @@ void TDataAdapter::GetAllGraphs() {
 void TDataAdapter::GetGraph(const int id) {
     QString url;
     url = "http://" + Host_ + ":" + Port_ + "/graph?id=" + QString::number(id);
+    qDebug() << url;
+    Manager_->get(QNetworkRequest(QUrl(url)));
+}
+
+void TDataAdapter::CreateGraph(QString graphName)
+{
+    QString url;
+    url = "http://" + Host_ + ":" + Port_ + "/create?name=" + graphName;
     qDebug() << url;
     Manager_->get(QNetworkRequest(QUrl(url)));
 }

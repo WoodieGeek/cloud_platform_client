@@ -32,7 +32,9 @@ SOURCES += \
     library/node.cpp \
     library/edge.cpp \
     library/menu.cpp \
-    library/data_adapter.cpp
+    library/data_adapter.cpp \
+    library/json_edit.cpp \
+    library/create_dialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +42,9 @@ HEADERS += \
     library/node.h \
     library/edge.h \
     library/menu.h \
-    library/data_adapter.h
+    library/data_adapter.h \
+    library/json_edit.h \
+    library/create_dialog.h
 
 FORMS += \
         mainwindow.ui

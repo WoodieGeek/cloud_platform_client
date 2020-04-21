@@ -17,6 +17,7 @@ public:
     TDataAdapter();
     void GetAllGraphs();
     void GetGraph(const int id);
+    void CreateGraph(QString graphName);
     /*
     void UpdateGraph(QString graph, int id);
     void RunGraph();
@@ -25,6 +26,7 @@ public:
 private:
     void ProcessGraphList(QString body);
     void ProcessGraph(QString body);
+    void ProcessGraphCreate();
 
 private slots:
     void ReadyRead(QNetworkReply* reply);
@@ -32,6 +34,7 @@ private slots:
 signals:
     void UpdateGraphList(QVector<QPair<int, QString>> graphList);
     void UpdateGraph(QMap<QString, QVector<QString>>);
+    void GraphHaveBeenCreated();
 
 private:
     QNetworkAccessManager* Manager_;
