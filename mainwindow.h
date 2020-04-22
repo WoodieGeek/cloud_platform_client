@@ -29,17 +29,16 @@ private:
     void CreateConnections();
     void UpdateTextEdit();
 
+    void keyPressEvent(QKeyEvent *event) override;
+
 private slots:
     void JsonButtonClicked();
     void GraphButtonClicked();
     void ResultsButtonClicked();
     void CreateButtonClicked();
     void CreateDialogAddGraph(QString graphName);
-
-    void UpdateGraphList(QVector<QPair<int, QString>> graphList);
-    void UpdateGraph(QMap<QString, QVector<QString>> graph);
     void UpdateCurrentGraphID(int id);
-    void GraphHaveBeenCreated();
+
 private:
     Ui::MainWindow *ui;
     TGraphWidget* GraphWidget_;

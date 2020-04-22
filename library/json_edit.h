@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTextEdit>
+#include "data_adapter.h"
 
 class TJsonEdit : public QObject
 {
@@ -11,9 +12,11 @@ public:
     explicit TJsonEdit(QObject *parent = nullptr);
     QTextEdit* GetJsonEdit();
     void UpdateGraph(QMap<QString, QVector<QString>> graph);
+    QString GetText();
     ~TJsonEdit();
+private:
+    bool IsValidGraph();
 signals:
-
 public slots:
 private:
     QTextEdit* JsonEdit_;

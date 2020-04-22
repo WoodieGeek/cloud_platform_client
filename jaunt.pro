@@ -34,7 +34,10 @@ SOURCES += \
     library/menu.cpp \
     library/data_adapter.cpp \
     library/json_edit.cpp \
-    library/create_dialog.cpp
+    library/create_dialog.cpp \
+    library/http_client/http_request.cpp \
+    library/http_client/http_reply.cpp \
+    library/http_client/http_manager.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +47,10 @@ HEADERS += \
     library/menu.h \
     library/data_adapter.h \
     library/json_edit.h \
-    library/create_dialog.h
+    library/create_dialog.h \
+    library/http_client/http_request.h \
+    library/http_client/http_reply.h \
+    library/http_client/http_manager.h
 
 FORMS += \
         mainwindow.ui

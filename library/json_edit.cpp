@@ -29,7 +29,19 @@ void TJsonEdit::UpdateGraph(QMap<QString, QVector<QString> > graph)
     JsonEdit_->setText(QString{graphDoc.toJson(QJsonDocument::Indented)});
 }
 
+QString TJsonEdit::GetText()
+{
+    return JsonEdit_->toPlainText();
+}
+
 TJsonEdit::~TJsonEdit()
 {
     delete JsonEdit_;
+}
+
+bool TJsonEdit::IsValidGraph()
+{
+    auto graphText = JsonEdit_->toPlainText();
+    auto graphDoc = QJsonDocument::fromJson(graphText.toUtf8());
+    return true;
 }

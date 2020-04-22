@@ -4,40 +4,23 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDebug>
-#include <QTextStream>
+#include <QJsonArray>
+#include "http_client/http_request.h"
+#include "http_client/http_reply.h"
 
 TDataAdapter::TDataAdapter()
 {
-    Manager_ = new QNetworkAccessManager();
-    Manager_->setNetworkAccessible(QNetworkAccessManager::Accessible);
-    connect(Manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(ReadyRead(QNetworkReply*)));
-    Resolver_["/graphs"] = [this](QString body) {
-        this->ProcessGraphList(std::move(body));
-    };
-    Resolver_["/graph"] = [this](QString body) {
-        this->ProcessGraph(std::move(body));
-    };
-    Resolver_["/create"] = [this](QString body) {
-        this->ProcessGraphCreate();
-    };
 }
 
-void TDataAdapter::ReadyRead(QNetworkReply *reply) {
-    auto path = reply->url().path();
-    if (Resolver_.contains(path)) {
-        Resolver_[path](QString{reply->readAll()});
-    }
-}
-
-void TDataAdapter::ProcessGraphList(QString body) {
+QVector<QPair<int, QString> > TDataAdapter::ProcessGraphList(QString body) {
     auto jsonDoc = QJsonDocument::fromJson(body.toUtf8());
     auto jsonObject = jsonDoc.object();
     if (!jsonObject.contains("set")) {
-        return;
+        return {};
     }
     auto graphArray = jsonObject.value("set");
     if (!graphArray.isArray()) {
-        return;
+        return {};
     }
     QVector<QPair<int, QString>> result;
     for (const auto& graph : graphArray.toArray()) {
@@ -49,10 +32,10 @@ void TDataAdapter::ProcessGraphList(QString body) {
             result.push_back({graphObject["id"].toString().toInt(), graphObject["name"].toString()});
         }
     }
-    emit UpdateGraphList(result);
+    return result;
 }
 
-void TDataAdapter::ProcessGraph(QString body) {
+QMap<QString, QVector<QString>> TDataAdapter::ProcessGraph(QString body) {
     auto jsonDoc = QJsonDocument::fromJson(body.toUtf8());
     auto jsonObject = jsonDoc.object();
     QMap<QString, QVector<QString>> result;
@@ -68,32 +51,40 @@ void TDataAdapter::ProcessGraph(QString body) {
             result[key] = {};
         }
     }
-    emit UpdateGraph(result);
+    return result;
 }
 
-void TDataAdapter::ProcessGraphCreate() {
-    emit GraphHaveBeenCreated();
-}
-
-void TDataAdapter::GetAllGraphs() {
-    QString url;
-    url = "http://" + Host_  + ":" + Port_ + "/graphs";
-    qDebug() << url;
-    Manager_->get(QNetworkRequest(QUrl(url)));
+QVector<QPair<int, QString> > TDataAdapter::GetAllGraphs() {
+    THttpRequest request;
+    request.Path = "/graphs";
+    auto reply = Manager_.SendRequest(request);
+    return ProcessGraphList(reply.Content);
 }
 
 
-void TDataAdapter::GetGraph(const int id) {
-    QString url;
-    url = "http://" + Host_ + ":" + Port_ + "/graph?id=" + QString::number(id);
-    qDebug() << url;
-    Manager_->get(QNetworkRequest(QUrl(url)));
+QMap<QString, QVector<QString> > TDataAdapter::GetGraph(const int id) {
+    THttpRequest request;
+    request.Type = "GET";
+    request.Path = "/graph";
+    request.Cgi["id"] = QString::number(id);
+    auto reply = Manager_.SendRequest(request);
+    return ProcessGraph(reply.Content);
 }
 
 void TDataAdapter::CreateGraph(QString graphName)
 {
-    QString url;
-    url = "http://" + Host_ + ":" + Port_ + "/create?name=" + graphName;
-    qDebug() << url;
-    Manager_->get(QNetworkRequest(QUrl(url)));
+    THttpRequest request;
+    request.Type = "GET";
+    request.Path = "/create";
+    request.Cgi["name"] = graphName;
+    auto reply = Manager_.SendRequest(request);
+}
+
+void TDataAdapter::UpdateGraph(int ID, QString graph)
+{
+    THttpRequest request; request.Type = "POST";
+    request.Path = "/graph_update";
+    request.Cgi["id"] = QString::number(ID);
+    request.Content = graph;
+    Manager_.SendRequest(request);
 }

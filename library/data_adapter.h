@@ -3,45 +3,36 @@
 
 #include <functional>
 
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QtNetwork>
+#include <QObject>
+
 #include <QMap>
 #include <QPair>
 #include <QVector>
 
+#include "http_client/http_manager.h"
+
 class TDataAdapter : public QObject
 {
     Q_OBJECT
+    using TGraphType = QMap<QString, QVector<QString>>;
 public:
     TDataAdapter();
-    void GetAllGraphs();
-    void GetGraph(const int id);
+    QVector<QPair<int, QString>> GetAllGraphs();
+    QMap<QString, QVector<QString>> GetGraph(const int id);
     void CreateGraph(QString graphName);
+    void UpdateGraph(int ID, QString graph);
+
     /*
     void UpdateGraph(QString graph, int id);
     void RunGraph();
     void GetResults();
     */
 private:
-    void ProcessGraphList(QString body);
-    void ProcessGraph(QString body);
-    void ProcessGraphCreate();
-
-private slots:
-    void ReadyRead(QNetworkReply* reply);
-
-signals:
-    void UpdateGraphList(QVector<QPair<int, QString>> graphList);
-    void UpdateGraph(QMap<QString, QVector<QString>>);
-    void GraphHaveBeenCreated();
+    QVector<QPair<int, QString>> ProcessGraphList(QString body);
+    QMap<QString, QVector<QString>> ProcessGraph(QString body);
 
 private:
-    QNetworkAccessManager* Manager_;
-    QMap<QString, std::function<void(QString body)>> Resolver_;
-
-    QString Host_ = "127.0.0.1";
-    QString Port_ = "8080";
+    THttpManager Manager_;
 };
 
 #endif // DATA_ADAPTER_H

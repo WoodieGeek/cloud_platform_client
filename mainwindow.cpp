@@ -4,11 +4,12 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QDebug>
+#include <QKeyEvent>
+
+#include "library/http_client/http_manager.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     GraphWidget_ = new TGraphWidget();
     Menu_ = new TMenu(this);
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     CreateConnections();
     DataAdapter_->GetAllGraphs();
+    Menu_->UpdateComboBox(DataAdapter_->GetAllGraphs());
 }
 
 void MainWindow::CreateConnections() {
@@ -45,11 +47,21 @@ void MainWindow::CreateConnections() {
 
     connect(Menu_, SIGNAL(UpdateCurrentGraphID(int)), this, SLOT(UpdateCurrentGraphID(int)));
 
-    connect(DataAdapter_, SIGNAL(UpdateGraphList(QVector<QPair<int,QString> >)), this, SLOT(UpdateGraphList(QVector<QPair<int,QString> >)));
-    connect(DataAdapter_,SIGNAL(UpdateGraph(QMap<QString,QVector<QString> >)), this, SLOT(UpdateGraph(QMap<QString,QVector<QString> >)));
-    connect(DataAdapter_, SIGNAL(GraphHaveBeenCreated()), this, SLOT(GraphHaveBeenCreated()));
-
     connect(CreateDialog_, SIGNAL(AddNewGraph(QString)), this, SLOT(CreateDialogAddGraph(QString)));
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_S && event->modifiers() & Qt::ControlModifier) {
+        qDebug() << "SAVE";
+        if (!JsonEdit_->GetJsonEdit()->isHidden()) {
+            auto text = JsonEdit_->GetText();
+            if (!text.isEmpty()) {
+                DataAdapter_->UpdateGraph(CurrentGraphID, text);
+                GraphWidget_->UpdateGraph(DataAdapter_->GetGraph(CurrentGraphID));
+            }
+        }
+    }
 }
 
 void MainWindow::JsonButtonClicked() {
@@ -75,31 +87,20 @@ void MainWindow::CreateButtonClicked()
 void MainWindow::CreateDialogAddGraph(QString graphName)
 {
     DataAdapter_->CreateGraph(graphName);
+    Menu_->UpdateComboBox(DataAdapter_->GetAllGraphs());
 }
 
-void MainWindow::UpdateGraphList(QVector<QPair<int, QString> > graphList) {
-    Menu_->UpdateComboBox(graphList);
-}
 
-void MainWindow::UpdateGraph(QMap<QString, QVector<QString> > graph) {
+void MainWindow::UpdateCurrentGraphID(int id)
+{
+    CurrentGraphID = id;
+    auto graph = DataAdapter_->GetGraph(id);
     GraphWidget_->UpdateGraph(graph);
     JsonEdit_->UpdateGraph(graph);
     repaint();
 }
 
-void MainWindow::UpdateCurrentGraphID(int id)
-{
-    CurrentGraphID = id;
-    DataAdapter_->GetGraph(id);
-}
-
-void MainWindow::GraphHaveBeenCreated()
-{
-    DataAdapter_->GetAllGraphs();
-}
-
 void MainWindow::paintEvent(QPaintEvent * event) {
-
 }
 
 MainWindow::~MainWindow()
