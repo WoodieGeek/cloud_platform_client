@@ -1,10 +1,18 @@
 #include "graph.h"
 #include <QGraphicsScene>
+#include <QMouseEvent>
 
 TGraphWidget::TGraphWidget(QWidget* parent)
     : QWidget(parent)
 {
-    //Position_ = QRectF{90, 30, 900, 500};
+    const auto bWidth = 60, bHeight = 60;
+    BinaryUpdateButton_ = new TBinaryUpdateButton({0, 0, bWidth, bHeight});
+    BinaryUpdateDialog_ = new TBinaryUpdateDialog(this);
+
+    RunButton_ = new TRunButton({0, 0, bWidth, bHeight});
+
+
+    connect(BinaryUpdateDialog_, SIGNAL(UpdateBinary(QString,QString)), this, SLOT(UpdateBinarySlot(QString,QString)));
 }
 
 void TGraphWidget::UpdateGraph(QMap<QString, QVector<QString> > graph) {
@@ -81,6 +89,23 @@ QVector<QVector<QString>> TGraphWidget::GetBfsTree() {
     return result;
 }
 
+void TGraphWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (BinaryUpdateButton_->IsClicked(event)) {
+        QVector<QString> graphNode;
+        for (const auto& node : Graph_.keys()) {
+            graphNode.append(node);
+        }
+        BinaryUpdateDialog_->UpdateNodeList(graphNode);
+        BinaryUpdateDialog_->exec();
+    }
+}
+
+void TGraphWidget::UpdateBinarySlot(QString node, QString binary)
+{
+    emit UpdateBinary(node, binary);
+}
+
 void TGraphWidget::paintEvent(QPaintEvent *event) {
     RebuildGraph();
     QPainter painter(this);
@@ -90,7 +115,15 @@ void TGraphWidget::paintEvent(QPaintEvent *event) {
     for (auto& node : Nodes_) {
         node.Draw(&painter);
     }
+    BinaryUpdateButton_->SetPosition(rect());
+    BinaryUpdateButton_->Draw(&painter);
+
+    RunButton_->SetPosition(rect());
+    RunButton_->Draw(&painter);
 }
 
 TGraphWidget::~TGraphWidget() {
+    delete BinaryUpdateButton_;
+    delete BinaryUpdateDialog_;
+    delete RunButton_;
 }

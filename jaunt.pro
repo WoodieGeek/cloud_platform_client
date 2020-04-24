@@ -37,7 +37,10 @@ SOURCES += \
     library/create_dialog.cpp \
     library/http_client/http_request.cpp \
     library/http_client/http_reply.cpp \
-    library/http_client/http_manager.cpp
+    library/http_client/http_manager.cpp \
+    library/results_table.cpp \
+    library/update_binary_dialog.cpp \
+    library/run_dialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -50,7 +53,14 @@ HEADERS += \
     library/create_dialog.h \
     library/http_client/http_request.h \
     library/http_client/http_reply.h \
-    library/http_client/http_manager.h
+    library/http_client/http_manager.h \
+    library/results_table.h \
+    library/update_binary_dialog.h \
+    library/util/base64.hpp \
+    library/run_dialog.h
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += \
+    images/resources.qrc

@@ -7,6 +7,7 @@
 #include "library/data_adapter.h"
 #include "library/json_edit.h"
 #include "library/create_dialog.h"
+#include "library/results_table.h"
 
 #include <QMainWindow>
 #include <QTextEdit>
@@ -39,9 +40,12 @@ private slots:
     void CreateDialogAddGraph(QString graphName);
     void UpdateCurrentGraphID(int id);
 
+    void UpdateBinary(QString node, QString binary);
+
 private:
     Ui::MainWindow *ui;
     TGraphWidget* GraphWidget_;
+    TResultsTable* ResultsTable_;
     TJsonEdit* JsonEdit_;
     TMenu* Menu_;
     TDataAdapter* DataAdapter_;

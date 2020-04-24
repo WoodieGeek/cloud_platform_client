@@ -32,6 +32,7 @@ QVector<QPair<int, QString> > TDataAdapter::ProcessGraphList(QString body) {
             result.push_back({graphObject["id"].toString().toInt(), graphObject["name"].toString()});
         }
     }
+    std::sort(result.begin(), result.end());
     return result;
 }
 
@@ -54,6 +55,15 @@ QMap<QString, QVector<QString>> TDataAdapter::ProcessGraph(QString body) {
     return result;
 }
 
+QJsonArray TDataAdapter::ProcessResultsByGraphID(QString body)
+{
+    auto jsonDoc = QJsonDocument::fromJson(body.toUtf8());
+    if (jsonDoc.isArray()) {
+        return jsonDoc.array();
+    }
+    return {};
+}
+
 QVector<QPair<int, QString> > TDataAdapter::GetAllGraphs() {
     THttpRequest request;
     request.Path = "/graphs";
@@ -71,6 +81,16 @@ QMap<QString, QVector<QString> > TDataAdapter::GetGraph(const int id) {
     return ProcessGraph(reply.Content);
 }
 
+QJsonArray TDataAdapter::GetResultsByGraphID(const int graphID)
+{
+    THttpRequest request;
+    request.Type = "GET";
+    request.Path = "/results";
+    request.Cgi["id"] = QString::number(graphID);
+    auto reply = Manager_.SendRequest(request);
+    return ProcessResultsByGraphID(reply.Content);
+}
+
 void TDataAdapter::CreateGraph(QString graphName)
 {
     THttpRequest request;
@@ -86,5 +106,16 @@ void TDataAdapter::UpdateGraph(int ID, QString graph)
     request.Path = "/graph_update";
     request.Cgi["id"] = QString::number(ID);
     request.Content = graph;
+    Manager_.SendRequest(request);
+}
+
+void TDataAdapter::UpdateBinary(const int graphID, QString node, QString binary)
+{
+    THttpRequest request;
+    request.Type = "POST";
+    request.Path = "/binary_update";
+    request.Cgi["graph_id"] = QString::number(graphID);
+    request.Cgi["node"] = node;
+    request.Content = binary;
     Manager_.SendRequest(request);
 }

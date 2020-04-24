@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>upload_button.jpg</file>
+        <file>upload_icon.png</file>
+        <file>tmp.png</file>
+        <file>upload.png</file>
+        <file>run.png</file>
+    </qresource>
+</RCC>

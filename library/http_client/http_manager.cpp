@@ -9,6 +9,7 @@ THttpManager::THttpManager()
 
 THttpReply THttpManager::SendRequest(THttpRequest request)
 {
+    qDebug() << request.Serialize();
     request.Headers["Host"] = HOST;
     QTcpSocket* socket = new QTcpSocket();
     socket->connectToHost(HOST, PORT);
@@ -20,5 +21,8 @@ THttpReply THttpManager::SendRequest(THttpRequest request)
     socket->close();
     socket->deleteLater();
     auto reply = THttpReply::Parse(data);
+    if (reply.Code != 200) {
+        qDebug() << reply.Content;
+    }
     return reply;
 }

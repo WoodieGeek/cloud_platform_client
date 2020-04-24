@@ -17,10 +17,14 @@ class TDataAdapter : public QObject
     using TGraphType = QMap<QString, QVector<QString>>;
 public:
     TDataAdapter();
+
     QVector<QPair<int, QString>> GetAllGraphs();
     QMap<QString, QVector<QString>> GetGraph(const int id);
+    QJsonArray GetResultsByGraphID(const int graphID);
+
     void CreateGraph(QString graphName);
     void UpdateGraph(int ID, QString graph);
+    void UpdateBinary(const int graphID, QString node, QString binary);
 
     /*
     void UpdateGraph(QString graph, int id);
@@ -30,6 +34,7 @@ public:
 private:
     QVector<QPair<int, QString>> ProcessGraphList(QString body);
     QMap<QString, QVector<QString>> ProcessGraph(QString body);
+    QJsonArray ProcessResultsByGraphID(QString body);
 
 private:
     THttpManager Manager_;
