@@ -10,9 +10,11 @@ TGraphWidget::TGraphWidget(QWidget* parent)
     BinaryUpdateDialog_ = new TBinaryUpdateDialog(this);
 
     RunButton_ = new TRunButton({0, 0, bWidth, bHeight});
+    RunDialog_ = new TRunDialog(this);
 
 
     connect(BinaryUpdateDialog_, SIGNAL(UpdateBinary(QString,QString)), this, SLOT(UpdateBinarySlot(QString,QString)));
+    connect(RunDialog_, SIGNAL(RunGraph(QString)), this, SLOT(RunGraphSlot(QString)));
 }
 
 void TGraphWidget::UpdateGraph(QMap<QString, QVector<QString> > graph) {
@@ -99,11 +101,19 @@ void TGraphWidget::mousePressEvent(QMouseEvent *event)
         BinaryUpdateDialog_->UpdateNodeList(graphNode);
         BinaryUpdateDialog_->exec();
     }
+    if(RunButton_->IsClicked(event)) {
+        RunDialog_->exec();
+    }
 }
 
 void TGraphWidget::UpdateBinarySlot(QString node, QString binary)
 {
     emit UpdateBinary(node, binary);
+}
+
+void TGraphWidget::RunGraphSlot(QString input)
+{
+    emit RunGraph(input);
 }
 
 void TGraphWidget::paintEvent(QPaintEvent *event) {

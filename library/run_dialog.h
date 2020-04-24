@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QLabel>
+#include <QDialog>
 
 class TRunDialog : public QDialog
 {
@@ -13,12 +15,16 @@ public:
     ~TRunDialog();
 
 signals:
+    void RunGraph(QString);
 
 public slots:
+    void RunButtonClicked();
+    void SelectButtonClicked();
 private:
     QPushButton* SelectButton_;
     QPushButton* RunButton_;
     QTextEdit* TextEdit_;
+    QLabel* PathLabel_;
 };
 
 #endif // RUN_DIALOG_H

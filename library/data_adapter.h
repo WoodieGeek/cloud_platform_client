@@ -25,12 +25,8 @@ public:
     void CreateGraph(QString graphName);
     void UpdateGraph(int ID, QString graph);
     void UpdateBinary(const int graphID, QString node, QString binary);
+    void RunGraph(const int graphID, QString input);
 
-    /*
-    void UpdateGraph(QString graph, int id);
-    void RunGraph();
-    void GetResults();
-    */
 private:
     QVector<QPair<int, QString>> ProcessGraphList(QString body);
     QMap<QString, QVector<QString>> ProcessGraph(QString body);

@@ -41,6 +41,7 @@ private slots:
     void UpdateCurrentGraphID(int id);
 
     void UpdateBinary(QString node, QString binary);
+    void RunGraph(QString input);
 
 private:
     Ui::MainWindow *ui;

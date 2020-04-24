@@ -56,6 +56,7 @@ void MainWindow::CreateConnections() {
     connect(CreateDialog_, SIGNAL(AddNewGraph(QString)), this, SLOT(CreateDialogAddGraph(QString)));
 
     connect(GraphWidget_, SIGNAL(UpdateBinary(QString,QString)), this, SLOT(UpdateBinary(QString,QString)));
+    connect(GraphWidget_, SIGNAL(RunGraph(QString)), this, SLOT(RunGraph(QString)));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -88,9 +89,11 @@ void MainWindow::GraphButtonClicked() {
 
 void MainWindow::ResultsButtonClicked()
 {
+
     JsonEdit_->GetJsonEdit()->hide();
     GraphWidget_->hide();
 
+    ResultsTable_->UpdateTable(DataAdapter_->GetResultsByGraphID(CurrentGraphID));
     ResultsTable_->GetTable()->show();
     ui->statusBar->showMessage("Current Graph");
 }
@@ -121,6 +124,12 @@ void MainWindow::UpdateCurrentGraphID(int id)
 void MainWindow::UpdateBinary(QString node, QString binary)
 {
     DataAdapter_->UpdateBinary(CurrentGraphID, node, binary);
+}
+
+void MainWindow::RunGraph(QString input)
+{
+    DataAdapter_->RunGraph(CurrentGraphID, input);
+    ResultsTable_->UpdateTable(DataAdapter_->GetResultsByGraphID(CurrentGraphID));
 }
 
 void MainWindow::paintEvent(QPaintEvent * event) {

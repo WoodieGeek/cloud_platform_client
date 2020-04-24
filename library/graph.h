@@ -2,7 +2,9 @@
 #define TGRAPH_H
 #include "node.h"
 #include "edge.h"
-#include "update_binary_dialog.h" #include "data_adapter.h"
+#include "update_binary_dialog.h"
+#include "run_dialog.h"
+#include "data_adapter.h"
 
 #include <QObject>
 #include <QWidget>
@@ -89,6 +91,7 @@ private:
     TBinaryUpdateDialog* BinaryUpdateDialog_;
 
     TRunButton* RunButton_;
+    TRunDialog* RunDialog_;
 
     const QString START_NODE = "START";
     const QString FINISH_NODE = "FINISH";
@@ -96,8 +99,10 @@ protected:
     void mousePressEvent(QMouseEvent *event);
 public slots:
     void UpdateBinarySlot(QString node, QString binary);
+    void RunGraphSlot(QString input);
 signals:
     void UpdateBinary(QString, QString);
+    void RunGraph(QString);
 };
 
 #endif // TGRAPH_H

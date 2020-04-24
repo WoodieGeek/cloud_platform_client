@@ -119,3 +119,13 @@ void TDataAdapter::UpdateBinary(const int graphID, QString node, QString binary)
     request.Content = binary;
     Manager_.SendRequest(request);
 }
+
+void TDataAdapter::RunGraph(const int graphID, QString input)
+{
+    THttpRequest request;
+    request.Type = "POST";
+    request.Path = "/run";
+    request.Cgi["id"] = QString::number(graphID);
+    request.Content = input;
+    Manager_.SendRequest(request);
+}
